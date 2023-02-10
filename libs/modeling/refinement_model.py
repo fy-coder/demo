@@ -452,7 +452,7 @@ class Refinement_module(nn.Module):
 
         s1 = 2304
         t1 = 0
-        for a1 in [1, 1, 1, 1, 1, 1.1]:
+        for a1 in [1, 1, 1, 1, 1, 0.9]:
             
             gt_low[:,t1:s1]/=a1
             out_ref[:,t1:s1]/=a1
