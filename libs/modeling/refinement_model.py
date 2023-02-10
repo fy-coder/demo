@@ -459,7 +459,7 @@ class Refinement_module(nn.Module):
             gt_high[:,t1:s1]/=a1
             
             t1+=s1
-            s1/=2
+            s1//=2
 
         gt_low = gt_low[mask]
         out_ref = out_ref[mask]
