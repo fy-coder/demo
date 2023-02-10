@@ -440,7 +440,6 @@ class Refinement_module(nn.Module):
         # print(c_loss)
         # exit()
           
-
         outside = torch.isinf(gt_low)
         valid = valid_mask[:, :, None].repeat(1, 1, 2)
         mask = torch.logical_and((outside == False), valid)
@@ -451,13 +450,13 @@ class Refinement_module(nn.Module):
         gt_prob[outside] = 0
         prob_loss = F.smooth_l1_loss(out_prob[valid], gt_prob[valid], reduction='mean')
 
-        gt_low[:,0:3456]/=2
-        out_ref[:,0:3456]/=2
-        gt_high[:,0:3456]/=2
-        # gt_low[:,4320:4536]/=4
-        # out_ref[:,4320:4536]/=4
-        # gt_high[:,4320:4536]/=4
-
+        a1=1.5
+        gt_low[:,0:3456]/=a1
+        out_ref[:,0:3456]/=a1
+        gt_high[:,0:3456]/=a1
+        # gt_low[:,4320:4536]/=2
+        # out_ref[:,4320:4536]/=2
+        # gt_high[:,4320:4536]/=2
 
         gt_low = gt_low[mask]
         out_ref = out_ref[mask]
@@ -471,7 +470,6 @@ class Refinement_module(nn.Module):
         dis = torch.mean(c, dim=-1)
 
         # dis, _ = torch.min(c, dim=-1)
-
         # dis[mask_in] = 0  # dont!
         # ref_loss = dis.mean()
 
@@ -495,7 +493,6 @@ class Refinement_module(nn.Module):
         # for l in range(6):
         #     print(mask[:,s:s+x].shape)
         #     print(mask[:,s:s+x].sum())
-            
         #     s+=x
         #     x//=2
         # exit()
@@ -517,6 +514,7 @@ class Refinement_module(nn.Module):
         #     reduction='sum'
         # ) / self.loss_normalizer
         # exit() 
+
         return {
                 'ref_loss': ref_loss,
                 'inf_loss': inf_loss,
