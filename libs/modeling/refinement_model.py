@@ -451,6 +451,14 @@ class Refinement_module(nn.Module):
         gt_prob[outside] = 0
         prob_loss = F.smooth_l1_loss(out_prob[valid], gt_prob[valid], reduction='mean')
 
+        gt_low[:,0:3456]*=2
+        out_ref[:,0:3456]*=2
+        gt_high[:,0:3456]*=2
+        gt_low[:,4320:4536]/=2
+        out_ref[:,4320:4536]/=2
+        gt_high[:,4320:4536]/=2
+
+
         gt_low = gt_low[mask]
         out_ref = out_ref[mask]
         gt_high = gt_high[mask]
@@ -466,8 +474,7 @@ class Refinement_module(nn.Module):
 
         # dis[mask_in] = 0  # dont!
         # ref_loss = dis.mean()
-        dis[:,0:2304+1152]*=2
-        dis[:,4320:4536]/=2
+
         ref_loss = dis[mask_in==False].mean()
 
         # ref_loss /= self.loss_normalizer
