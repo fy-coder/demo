@@ -326,8 +326,8 @@ class Refinement_module(nn.Module):
         gt_ref_low = dis0.clone()
         gt_ref_high = dis0.clone()
 
-        low_p = 0.2  # 0 ~ 1
-        high_p = 0.2
+        low_p = 0  # 0 ~ 1
+        high_p = 0
 
         ra = concat_points[:, 1]
         rb = concat_points[:, 2]
@@ -451,12 +451,12 @@ class Refinement_module(nn.Module):
         gt_prob[outside] = 0
         prob_loss = F.smooth_l1_loss(out_prob[valid], gt_prob[valid], reduction='mean')
 
-        # gt_low[:,0:3456]*=4
-        # out_ref[:,0:3456]*=4
-        # gt_high[:,0:3456]*=4
-        gt_low[:,4320:4536]/=4
-        out_ref[:,4320:4536]/=4
-        gt_high[:,4320:4536]/=4
+        gt_low[:,0:3456]*=4
+        out_ref[:,0:3456]*=4
+        gt_high[:,0:3456]*=4
+        # gt_low[:,4320:4536]/=4
+        # out_ref[:,4320:4536]/=4
+        # gt_high[:,4320:4536]/=4
 
 
         gt_low = gt_low[mask]
