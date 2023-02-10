@@ -466,6 +466,8 @@ class Refinement_module(nn.Module):
 
         # dis[mask_in] = 0  # dont!
         # ref_loss = dis.mean()
+        dis[:,0:2304+1152]*=2
+        dis[:,4320:4536]/=2
         ref_loss = dis[mask_in==False].mean()
 
         # ref_loss /= self.loss_normalizer
@@ -481,15 +483,15 @@ class Refinement_module(nn.Module):
         
         num_pos = mask.sum()
 
-        x = 2304
-        s = 0
-        for l in range(6):
-            print(mask[:,s:s+x].shape)
-            print(mask[:,s:s+x].sum())
+        # x = 2304
+        # s = 0
+        # for l in range(6):
+        #     print(mask[:,s:s+x].shape)
+        #     print(mask[:,s:s+x].sum())
             
-            s+=x
-            x//=2
-        exit()
+        #     s+=x
+        #     x//=2
+        # exit()
 
         if step == 0:
             self.loss_normalizer = self.loss_normalizer_momentum * self.loss_normalizer + (
