@@ -480,6 +480,17 @@ class Refinement_module(nn.Module):
         # gt_target += self.train_label_smoothing / (self.num_classes + 1)
         
         num_pos = mask.sum()
+
+        x = 2304
+        s = 0
+        for l in range(6):
+            print(mask[s:s+x].shape)
+            print(mask[s:s+x].sum())
+            
+            s+=x
+            x//=2
+        exit()
+
         if step == 0:
             self.loss_normalizer = self.loss_normalizer_momentum * self.loss_normalizer + (
                 1 - self.loss_normalizer_momentum
