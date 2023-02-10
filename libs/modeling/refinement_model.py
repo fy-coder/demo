@@ -472,32 +472,30 @@ class Refinement_module(nn.Module):
         # inf_loss /= self.loss_normalizer
 
         # 2. cls_loss
-        gt_cls[out_mask] *= 0
-        gt_target = gt_cls[valid]
-        # gt_target = gt_cls[mask]
+        # gt_cls[out_mask] *= 0
+        # gt_target = gt_cls[valid]
+        gt_target = gt_cls[mask]
 
         # gt_target *= 1 - self.train_label_smoothing
         # gt_target += self.train_label_smoothing / (self.num_classes + 1)
-        # print(out_logit[mask][:10])
-        # print(gt_target[:10])
-        # exit()
+        
         num_pos = mask.sum()
         if step == 0:
             self.loss_normalizer = self.loss_normalizer_momentum * self.loss_normalizer + (
                 1 - self.loss_normalizer_momentum
             ) * max(num_pos, 1)
 
-        # cls_loss = sigmoid_focal_loss(
-        #     out_logit[mask],
-        #     gt_target,                                          # [3011, 20]
-        #     reduction='sum'
-        # ) / self.loss_normalizer
-
         cls_loss = sigmoid_focal_loss(
-            out_logit[valid],
+            out_logit[mask],
             gt_target,                                          # [3011, 20]
             reduction='sum'
         ) / self.loss_normalizer
+
+        # cls_loss = sigmoid_focal_loss(
+        #     out_logit[valid],
+        #     gt_target,                                          # [3011, 20]
+        #     reduction='sum'
+        # ) / self.loss_normalizer
         # exit() 
         return {
                 'ref_loss': ref_loss,
