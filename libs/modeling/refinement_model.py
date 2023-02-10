@@ -484,8 +484,8 @@ class Refinement_module(nn.Module):
         x = 2304
         s = 0
         for l in range(6):
-            print(mask[s:s+x].shape)
-            print(mask[s:s+x].sum())
+            print(mask[:,s:s+x].shape)
+            print(mask[:,s:s+x].sum())
             
             s+=x
             x//=2
