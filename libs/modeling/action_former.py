@@ -1053,8 +1053,7 @@ class PtTransformer0(nn.Module):
                         # 1 2 4 8 16 32
                         ref = out_refines[min(i+b, L)-j].squeeze(1)
                         prob = out_probs[min(i+b, L)-j].squeeze(1)
-                        cls_ref = (torch.softmax(out_logits[min(i+b, L)-j].squeeze(1).reshape(prob.shape[0], 2, -1), dim=2)-0.05)
-                        
+                        cls_ref = (torch.softmax(out_logits[min(i+b, L)-j].squeeze(1).reshape(prob.shape[0], 2, -1), dim=2)-0.05)*2
                         stride_j = a[min(i+b, L)-j]
 
                         lr = prob[:,0].max()-prob[:,0].min()+1e-6
@@ -1081,8 +1080,9 @@ class PtTransformer0(nn.Module):
                                 # print(pred_prob[left_mask].shape)
                                 # print(cls_left)
                                 # print(pred_prob[left_mask])
+                                sp = 1
                                 if i!=2 and i!=3:
-                                    seg_left[left_mask] += (ref_left*stride_j/1.25) * (1-pred_prob[left_mask])
+                                    seg_left[left_mask] += (ref_left*stride_j/sp) * (1-pred_prob[left_mask])
                                 else:
                                     seg_left[left_mask] += (ref_left*stride_j/c) * (1-pred_prob[left_mask])
                                     # seg_left[left_mask] += (ref_left*stride_j/c) * (1-pred_prob_max[left_mask])
@@ -1092,7 +1092,7 @@ class PtTransformer0(nn.Module):
                                 prob_right = prob[right_idx[right_mask], 1] 
                                 cls_right = cls_ref[:, 1, :][right_idx[right_mask], cls_idxs[right_mask]]
                                 if i!=2 and i!=3:
-                                    seg_right[right_mask] += (ref_right*stride_j/1.25) * (1-pred_prob[right_mask])
+                                    seg_right[right_mask] += (ref_right*stride_j/sp) * (1-pred_prob[right_mask])
                                 else:
                                     seg_right[right_mask] += (ref_right*stride_j/c) * (1-pred_prob[right_mask])
                                     # seg_right[right_mask] += (ref_right*stride_j/c) * (1-pred_prob_max[right_mask])
@@ -1104,8 +1104,8 @@ class PtTransformer0(nn.Module):
                                 # cls_right[cls_right>0]=0
                                 aa = cls_left*prob_left +1
                                 bb = cls_right*prob_right +1
-                                # aa = cls_left +1
-                                # bb = cls_right +1
+                                # aa = cls_left/stride_j +1
+                                # bb = cls_right/stride_j +1
                                 pred_prob[left_mask] *= aa
                                 pred_prob[right_mask] *= bb
                         else:

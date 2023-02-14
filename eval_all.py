@@ -75,7 +75,7 @@ def main(args):
         map_location = lambda storage, loc: storage.cuda(cfg['devices'][0])
     )
     # load ema model instead
-    print("Loading from EMA model ...")
+    # print("Loading from EMA model ...")
     ref_model.load_state_dict(checkpoint['state_dict_ema'])
     del checkpoint
     # load ckpt, reset epoch / best rmse
@@ -84,7 +84,7 @@ def main(args):
         map_location = lambda storage, loc: storage.cuda(cfg['devices'][0])
     )
     # load ema model instead
-    print("Loading from EMA model ...")
+    # print("Loading from EMA model ...")
     af_model.load_state_dict(checkpoint['state_dict_ema'])
     del checkpoint
 
@@ -119,22 +119,22 @@ def main(args):
     print("All done! Total time: {:0.2f} sec".format(end - start))
 
     """6. Test the whole model"""
-    print("\nStart testing model {:s} ...".format(cfg['model_name']))
-    start = time.time()
-    mAP = valid_one_epoch_all(
-        val_loader,
-        af_model,
-        ref_model,
-        -1,
-        evaluator=det_eval,
-        output_file=output_file,
-        ext_score_file=cfg['test_cfg']['ext_score_file'],
-        tb_writer=None,
-        print_freq=args.print_freq,
-        refine=False
-    )
-    end = time.time()
-    print("All done! Total time: {:0.2f} sec".format(end - start))
+    # print("\nStart testing model {:s} ...".format(cfg['model_name']))
+    # start = time.time()
+    # mAP = valid_one_epoch_all(
+    #     val_loader,
+    #     af_model,
+    #     ref_model,
+    #     -1,
+    #     evaluator=det_eval,
+    #     output_file=output_file,
+    #     ext_score_file=cfg['test_cfg']['ext_score_file'],
+    #     tb_writer=None,
+    #     print_freq=args.print_freq,
+    #     refine=False
+    # )
+    # end = time.time()
+    # print("All done! Total time: {:0.2f} sec".format(end - start))
     return
 
 ################################################################################

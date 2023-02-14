@@ -226,7 +226,7 @@ class Refinement_module(nn.Module):
             prob_loss = torch.stack(prob_loss).min()*1  # 0.5
 
             cls_loss = torch.stack(cls_loss).min()*1
-            final_loss = ref_loss  + prob_loss + cls_loss
+            final_loss = ref_loss  + prob_loss + cls_loss + inf_loss
 
             return {
                     'ref_loss': ref_loss,
@@ -326,8 +326,8 @@ class Refinement_module(nn.Module):
         gt_ref_low = dis0.clone()
         gt_ref_high = dis0.clone()
 
-        low_p = 0.2  # 0 ~ 1
-        high_p = 0.2
+        low_p = 0  # 0 ~ 1
+        high_p = 0
 
         ra = concat_points[:, 1]
         rb = concat_points[:, 2]
@@ -338,13 +338,6 @@ class Refinement_module(nn.Module):
         hot = torch.zeros((num_pts, 2, 20), device=label.device)
         hot[lis[:, None].repeat(1, 2), lis[:2][None, :].repeat(num_pts, 1), label] = 1
         # torch.set_printoptions(threshold=np.inf)
-        # print(label[0,0])
-        # print(hot[0,0,:])
-        # print(hot.shape)
-        # exit()
-        
-        # print(gt_label[0])
-        # print(label[:10])
         # exit()
 
         for i in range(2):
@@ -360,33 +353,23 @@ class Refinement_module(nn.Module):
 
             dis_l /= concat_points[:, 3]  # 0 ~ 1
             dis_h /= concat_points[:, 3]
-            # print(dis_l[2303:2323])
-            # print(dis_h[2303:2323])
 
             dis_h[range_in] = dis_h[range_in] * (1 + high_p)
             dis_l[range_in] = dis_l[range_in] * (1 - low_p)
-            # print(dis_l[2303:2323])
-            # print(dis_h[2303:2323])
 
             dis_h[range_out] += (r/2) * high_p
             dis_l[range_out] -= (r/2) * low_p
-            # print(dis_l[2303:2323])
-            # print(dis_h[2303:2323])
 
             # dis_l[dis_l>1] = 1
             # dis_h[dis_h>1] = 1
 
             dis_l.masked_fill_(range_inf==1, float('inf'))
             dis_h.masked_fill_(range_inf==1, float('inf'))
-            # print(dis_l[2303:2323])
-            # print(dis_h[2303:2323])
             # print('-------------')
         # exit()
         idx = dis.transpose(2, 1)[lis[:, None].repeat(1, 2), lis[:2][None, :].repeat(num_pts, 1), dis_idx0] < 0
         gt_ref_low[idx] *= -1
         gt_ref_high[idx] *= -1
-
-        # exit()
 
         return gt_ref_low, gt_ref_high, hot
 
@@ -452,17 +435,22 @@ class Refinement_module(nn.Module):
 
         s1 = 2304
         t1 = 0
-        for a1 in [1.5, 1.5, 1, 1, 1, 1]:
+        for a1 in [2, 1.5, 1, 1, 1, 1]:
             # print(t1)
             # print(s1)
             # print(a1)
-
+            # a1 = mask[:,t1:t1+s1].sum()/(8*s1*2)
+            # a1 = 1/a1
             gt_low[:,t1:t1+s1]/=a1
             out_ref[:,t1:t1+s1]/=a1
             gt_high[:,t1:t1+s1]/=a1
 
+            # print(mask[:,t1:t1+s1].sum())
+            # print(8*s1*2)
+            # print(mask[:,t1:t1+s1].sum()/(8*s1*2))
             t1+=s1
             s1//=2
+            # print('=============')
         # exit()
         gt_low = gt_low[mask]
         out_ref = out_ref[mask]

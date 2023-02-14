@@ -492,16 +492,16 @@ def valid_one_epoch_all(
                     results['score'].append(output[vid_idx]['scores'])
 
         # printing
-        if (iter_idx != 0) and iter_idx % (print_freq) == 0:
-            # measure elapsed time (sync all kernels)
-            torch.cuda.synchronize()
-            batch_time.update((time.time() - start) / print_freq)
-            start = time.time()
+        # if (iter_idx != 0) and iter_idx % (print_freq) == 0:
+        #     # measure elapsed time (sync all kernels)
+        #     torch.cuda.synchronize()
+        #     batch_time.update((time.time() - start) / print_freq)
+        #     start = time.time()
 
-            # print timing
-            print('Test: [{0:05d}/{1:05d}]\t'
-                  'Time {batch_time.val:.2f} ({batch_time.avg:.2f})'.format(
-                  iter_idx, len(val_loader), batch_time=batch_time))
+        #     # print timing
+        #     print('Test: [{0:05d}/{1:05d}]\t'
+        #           'Time {batch_time.val:.2f} ({batch_time.avg:.2f})'.format(
+        #           iter_idx, len(val_loader), batch_time=batch_time))
 
     # gather all stats and evaluate
     results['t-start'] = torch.cat(results['t-start']).numpy()

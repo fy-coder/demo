@@ -67,7 +67,7 @@ class THUMOS14Dataset(Dataset):
         # dataset specific attributes
         self.db_attributes = {
             'dataset_name': 'thumos-14',
-            'tiou_thresholds': np.linspace(0.3, 0.7, 5),  # (0.3, 0.7, 5)
+            'tiou_thresholds': np.linspace(0.3, 0.7, 5),  # (0.3, 0.7, 5) (0, 0.9 ,10) (0.5, 0.9, 5)
             # we will mask out cliff diving
             'empty_label_ids': [],
         }
